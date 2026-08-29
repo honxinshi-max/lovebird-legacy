@@ -307,6 +307,23 @@ function createChick(
   return draft;
 }
 
+export function computeBreedingDigest(
+  eventId: EventId,
+  chicks: readonly Bird[],
+): string {
+  return stableId(
+    'HASH',
+    eventId,
+    JSON.stringify(
+      chicks.map((chick) => ({
+        id: chick.birdId,
+        genome: chick.genome,
+        ancestry: chick.ancestryComposition,
+      })),
+    ),
+  );
+}
+
 function failedAttempt(
   command: BreedCommand,
   state: GameState,
@@ -359,17 +376,7 @@ export function breedClutch(command: BreedCommand, state: GameState): BreedResul
   const explanations = chicks.map((chick) =>
     explainInheritance(chick, father, mother),
   );
-  const resultDigest = stableId(
-    'HASH',
-    command.eventId,
-    JSON.stringify(
-      chicks.map((chick) => ({
-        id: chick.birdId,
-        genome: chick.genome,
-        ancestry: chick.ancestryComposition,
-      })),
-    ),
-  );
+  const resultDigest = computeBreedingDigest(command.eventId, chicks);
   const event: BreedingEvent = {
     eventId: command.eventId,
     fatherId: father.birdId,
