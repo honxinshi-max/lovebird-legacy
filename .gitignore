@@ -1,0 +1,9 @@
+.worktrees/
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+.playwright-cli/
+*.log
+.DS_Store
