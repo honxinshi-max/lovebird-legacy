@@ -1,0 +1,56 @@
+:root {
+  color: #1d332f;
+  background: #efe8d8;
+  font-family:
+    "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 15%, rgb(255 250 237 / 88%), transparent 35%),
+    linear-gradient(145deg, #f3ecdc, #dce8dd);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  width: min(72rem, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 4rem 0;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: #a24f3d;
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: 0.96;
+}
+
+.lede {
+  max-width: 34rem;
+  margin-top: 1.25rem;
+  color: #4f635c;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+}
