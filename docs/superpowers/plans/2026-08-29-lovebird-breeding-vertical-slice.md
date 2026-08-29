@@ -66,8 +66,8 @@
 - `src/domain/*.test.ts` — deterministic and invariant tests beside domain modules.
 - `src/application/game.test.ts` — full command-level two-generation scenario.
 - `src/ui/App.test.tsx` — accessible UI flow smoke test.
-- `e2e/vertical-slice.spec.ts` — real browser happy path, refresh persistence and viewport checks.
-- `playwright.config.ts` — local server and two target viewports.
+- `output/playwright/*.png` — real-browser evidence at the two target viewports.
+- `docs/verification/2026-08-29-browser-qa.md` — happy path, refresh persistence, viewport and console receipts.
 
 ---
 
@@ -89,7 +89,7 @@
 - Consumes: no application code.
 - Produces: branded `BirdId`, `BandId`, `EventId`; `Bird`, `Genome`, `BirdEvent`, `GameState`; `createRandom(seed)`, `mixSeed(...parts)`, `stableId(prefix, ...parts)`.
 
-- [ ] **Step 1: Add the runnable TypeScript/React test shell and failing deterministic-random test**
+- [x] **Step 1: Add the runnable TypeScript/React test shell and failing deterministic-random test**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -107,13 +107,13 @@ describe('deterministic random contract', () => {
 });
 ```
 
-- [ ] **Step 2: Run the focused test and confirm red state**
+- [x] **Step 2: Run the focused test and confirm red state**
 
 Run: `npm install && npm test -- src/domain/random.test.ts`
 
 Expected: FAIL because `src/domain/random.ts` does not exist or exports are missing.
 
-- [ ] **Step 3: Implement the typed model and PRNG without browser dependencies**
+- [x] **Step 3: Implement the typed model and PRNG without browser dependencies**
 
 ```ts
 export interface SeededRandom {
@@ -130,13 +130,13 @@ export function stableId(prefix: string, ...parts: readonly (string | number)[])
 
 Define model unions explicitly: `SpeciesId`, `Sex`, `LifeStage`, `HealthState`, `CompatibilityLevel`, `LocusId`, `ValueRoute`, `BirdEventType`. Define `Bird` with immutable birth/genome fields and mutable breeding state separated as `BirdStatus`.
 
-- [ ] **Step 4: Verify test, typecheck and production build**
+- [x] **Step 4: Verify test, typecheck and production build**
 
 Run: `npm test -- src/domain/random.test.ts && npm run build`
 
 Expected: random test PASS and Vite production build PASS with a minimal Chinese loading shell.
 
-- [ ] **Step 5: Commit Task 1**
+- [x] **Step 5: Commit Task 1**
 
 ```bash
 git add package.json package-lock.json vite.config.ts tsconfig.json index.html src
@@ -157,7 +157,7 @@ git commit -m "chore: bootstrap deterministic lovebird prototype"
 - Consumes: `SpeciesId`, `LocusId`, `Genome`, `Bird` from `domain/types`.
 - Produces: `RULESET`, `getCompatibility(a, b)`, `getLocus(id)`, `createDemoState()`.
 
-- [ ] **Step 1: Write failing configuration and fixture-contract tests**
+- [x] **Step 1: Write failing configuration and fixture-contract tests**
 
 ```ts
 it('contains the promised first-slice content', () => {
@@ -175,13 +175,13 @@ it('creates six eligible adults with immutable identity', () => {
 });
 ```
 
-- [ ] **Step 2: Run both tests and confirm missing rules/fixtures**
+- [x] **Step 2: Run both tests and confirm missing rules/fixtures**
 
 Run: `npm test -- src/domain/rules.test.ts src/fixtures/seedBirds.test.ts`
 
 Expected: FAIL on unresolved `RULESET` and `createDemoState`.
 
-- [ ] **Step 3: Implement exact configuration and seeds**
+- [x] **Step 3: Implement exact configuration and seeds**
 
 ```ts
 export const RULESET = {
@@ -198,13 +198,13 @@ export const RULESET = {
 
 Add twelve complete locus definitions grouped 4 color, 2 pattern, 1 eye, 1 face, 1 feather and 3 health loci. Seed two adults per species, three male and three female overall, with intentional carriers and trade-offs. Add older non-owned ancestor birds to `pedigreeBirds`, not the six visible owned birds.
 
-- [ ] **Step 4: Verify content counts and all referenced alleles**
+- [x] **Step 4: Verify content counts and all referenced alleles**
 
 Run: `npm test -- src/domain/rules.test.ts src/fixtures/seedBirds.test.ts && npm run build`
 
 Expected: PASS; no seed genome references an undefined locus or allele.
 
-- [ ] **Step 5: Commit Task 2**
+- [x] **Step 5: Commit Task 2**
 
 ```bash
 git add src/domain/rules.ts src/domain/rules.test.ts src/fixtures
@@ -225,7 +225,7 @@ git commit -m "feat: add versioned lovebird rules and seed flock"
 - Consumes: `Genome`, `Bird`, `RULESET`, `SeededRandom`.
 - Produces: `inheritGenome(father, mother, rng)`, `derivePhenotype(bird)`, `derivePotential(bird)`, `explainInheritance(child, father, mother)`.
 
-- [ ] **Step 1: Write failing inheritance, replay and trade-off tests**
+- [x] **Step 1: Write failing inheritance, replay and trade-off tests**
 
 ```ts
 it('attributes every inherited allele to a parent or explicit mutation', () => {
@@ -247,13 +247,13 @@ it('cannot generate an individual in the top band for every dimension', () => {
 });
 ```
 
-- [ ] **Step 2: Run focused tests and observe red state**
+- [x] **Step 2: Run focused tests and observe red state**
 
 Run: `npm test -- src/domain/genetics.test.ts src/domain/phenotype.test.ts`
 
 Expected: FAIL because inheritance and phenotype functions are absent.
 
-- [ ] **Step 3: Implement traceable inheritance and resource axes**
+- [x] **Step 3: Implement traceable inheritance and resource axes**
 
 ```ts
 export function inheritGenome(
@@ -272,13 +272,13 @@ export interface PotentialProfile {
 
 Implement linked-block retention from species stability, per-locus mutation records, ancestry-neutral genotype inheritance, and four trade-off axes: burst energy, flight morphology, neural response and social attachment. Clamp displayed dimensions to 5–95, but prevent all-top outcomes through resource-axis deductions rather than a hidden overall-score budget.
 
-- [ ] **Step 4: Verify deterministic replay, explanations and 10,000-clutch invariant**
+- [x] **Step 4: Verify deterministic replay, explanations and 10,000-clutch invariant**
 
 Run: `npm test -- src/domain/genetics.test.ts src/domain/phenotype.test.ts`
 
 Expected: PASS including identical result for the same seed and no all-top individual.
 
-- [ ] **Step 5: Commit Task 3**
+- [x] **Step 5: Commit Task 3**
 
 ```bash
 git add src/domain/genetics.ts src/domain/genetics.test.ts src/domain/phenotype.ts src/domain/phenotype.test.ts
@@ -299,7 +299,7 @@ git commit -m "feat: implement explainable genetics and tradeoffs"
 - Consumes: birds by ID, rules, genetics and phenotype functions.
 - Produces: `analyzeRelationship(a, b, birds)`, `calculateAncestry(father, mother)`, `assessPairing(father, mother, state)`, `breedClutch(command, state)`.
 
-- [ ] **Step 1: Write failing relationship and breeding tests**
+- [x] **Step 1: Write failing relationship and breeding tests**
 
 ```ts
 it.each([
@@ -321,13 +321,13 @@ it('creates an auditable three-chick clutch', () => {
 });
 ```
 
-- [ ] **Step 2: Run relationship and breeding tests in red state**
+- [x] **Step 2: Run relationship and breeding tests in red state**
 
 Run: `npm test -- src/domain/pedigree.test.ts src/domain/breeding.test.ts`
 
 Expected: FAIL on missing analysis and breeding modules.
 
-- [ ] **Step 3: Implement conservative pedigree and eligibility rules**
+- [x] **Step 3: Implement conservative pedigree and eligibility rules**
 
 ```ts
 export interface PairAssessment {
@@ -347,13 +347,13 @@ export type BreedResult =
 
 Unknown ancestry must produce `risk-unknown`, never `unrelated`. Build ancestry vectors as a 50/50 normalized merge. Block incompatible, same-sex, immature, unwell, cooldown and exhausted birds. Use event-scoped child IDs and seeds. Preserve severe defects as negative health outcomes only.
 
-- [ ] **Step 4: Verify fixtures, pair symmetry and clutch replay**
+- [x] **Step 4: Verify fixtures, pair symmetry and clutch replay**
 
 Run: `npm test -- src/domain/pedigree.test.ts src/domain/breeding.test.ts src/domain/genetics.test.ts`
 
 Expected: PASS; the same event replays the same IDs, genomes, ancestry and explanations.
 
-- [ ] **Step 5: Commit Task 4**
+- [x] **Step 5: Commit Task 4**
 
 ```bash
 git add src/domain/pedigree.ts src/domain/pedigree.test.ts src/domain/breeding.ts src/domain/breeding.test.ts
@@ -376,7 +376,7 @@ git commit -m "feat: add pedigree risk and atomic breeding"
 - Consumes: `createDemoState`, `assessPairing`, `breedClutch`, domain types.
 - Produces: `GameRepository`, `MemoryGameRepository`, `IndexedDbGameRepository`, `GameService` command API and a local privacy-bounded `InteractionEvent` ledger.
 
-- [ ] **Step 1: Write failing immutable-history and full-loop command tests**
+- [x] **Step 1: Write failing immutable-history and full-loop command tests**
 
 ```ts
 it('rejects an event that rewrites immutable birth identity', () => {
@@ -404,13 +404,13 @@ it('records only structured prototype feedback', async () => {
 });
 ```
 
-- [ ] **Step 2: Run tests and confirm missing repository/service**
+- [x] **Step 2: Run tests and confirm missing repository/service**
 
 Run: `npm test -- src/domain/history.test.ts src/application/game.test.ts`
 
 Expected: FAIL on missing modules.
 
-- [ ] **Step 3: Implement transaction-shaped commands and snapshot validation**
+- [x] **Step 3: Implement transaction-shaped commands and snapshot validation**
 
 ```ts
 export interface GameRepository {
@@ -432,13 +432,13 @@ export class GameService {
 
 Define interaction types `profile-viewed`, `pair-compared`, `inheritance-explanation-opened`, `keep-reason-recorded` and `second-generation-completed`. Validate ruleset version and result digest before save. Repository writes the complete next state in one IndexedDB transaction. On failure, service retains the prior authoritative state and returns a typed persistence error. Interaction payloads contain bird/event IDs and structured choices only—no account, contact, free-form identity or device fingerprint.
 
-- [ ] **Step 4: Verify the command-level two-generation scenario**
+- [x] **Step 4: Verify the command-level two-generation scenario**
 
 Run: `npm test -- src/domain/history.test.ts src/application/game.test.ts`
 
 Expected: PASS with immutable history, revision conflict detection and a generation-two bird.
 
-- [ ] **Step 5: Commit Task 5**
+- [x] **Step 5: Commit Task 5**
 
 ```bash
 git add src/domain/history.ts src/domain/history.test.ts src/persistence src/application
@@ -463,7 +463,7 @@ git commit -m "feat: persist immutable two-generation game state"
 - Consumes: `GameState`, `derivePhenotype`, `derivePotential`, `GameService`.
 - Produces: accessible bird cards, layered SVG and profile/pedigree dialogs.
 
-- [ ] **Step 1: Write failing semantic rendering and profile tests**
+- [x] **Step 1: Write failing semantic rendering and profile tests**
 
 ```tsx
 it('renders parameterized layers with an accessible identity', () => {
@@ -481,23 +481,23 @@ it('opens a bird profile without exposing hidden genotype truth', async () => {
 });
 ```
 
-- [ ] **Step 2: Run UI tests and confirm red state**
+- [x] **Step 2: Run UI tests and confirm red state**
 
 Run: `npm test -- src/rendering/BirdAvatar.test.tsx src/ui/App.test.tsx`
 
 Expected: FAIL because UI/rendering modules are missing.
 
-- [ ] **Step 3: Implement the calm aviary visual language and responsive birdhouse**
+- [x] **Step 3: Implement the calm aviary visual language and responsive birdhouse**
 
 Use an earthy paper/ink palette with teal and coral state accents, not a generic dashboard. Render body, wing, face mask, tail, eye, beak, feet and pattern as named SVG layers. Use shared CSS keyframes for breathing, blinking and head tilt; respect `prefers-reduced-motion`. Cards show two strengths, one explicit cost, health and breeding status. Profile separates observed, tested and unknown genetics.
 
-- [ ] **Step 4: Verify UI tests and both viewport layouts**
+- [x] **Step 4: Verify UI tests and both viewport layouts**
 
 Run: `npm test -- src/rendering/BirdAvatar.test.tsx src/ui/App.test.tsx && npm run build`
 
 Expected: PASS; production build has no TypeScript errors.
 
-- [ ] **Step 5: Commit Task 6**
+- [x] **Step 5: Commit Task 6**
 
 ```bash
 git add src/rendering src/ui src/App.tsx src/styles.css
@@ -520,7 +520,7 @@ git commit -m "feat: add layered aviary and bird profiles"
 - Consumes: `GameService.comparePair`, `GameService.breed`, `GameService.keepBird`, `GameService.advanceDemoAge`.
 - Produces: complete accessible first- and second-generation player flow.
 
-- [ ] **Step 1: Add a failing UI-level complete-flow test**
+- [x] **Step 1: Add a failing UI-level complete-flow test**
 
 ```tsx
 it('completes a first clutch and records a non-score keep reason', async () => {
@@ -537,13 +537,13 @@ it('completes a first clutch and records a non-score keep reason', async () => {
 });
 ```
 
-- [ ] **Step 2: Run the flow test and confirm missing screen behavior**
+- [x] **Step 2: Run the flow test and confirm missing screen behavior**
 
 Run: `npm test -- src/ui/App.test.tsx`
 
 Expected: FAIL before the pairing and reveal screens exist.
 
-- [ ] **Step 3: Implement screen state as an explicit finite flow**
+- [x] **Step 3: Implement screen state as an explicit finite flow**
 
 ```ts
 type Screen =
@@ -556,13 +556,13 @@ type Screen =
 
 Show compatibility, relationship, known unknowns, risk bands, possible appearances and trade-offs before enabling breed. Reveal exactly three chicks and concrete parent-origin explanations. Require a value route plus a 4–80 character structured reason before keeping. Demo-age only the selected bird, then guide the player to a non-close-relative mate and completion. Call `recordInteraction` when profiles, comparisons and explanations are actually opened; `CompletionPanel` summarizes those local events and labels them “仅保存在本设备”。
 
-- [ ] **Step 4: Verify complete React flow, accessibility and build**
+- [x] **Step 4: Verify complete React flow, accessibility and build**
 
 Run: `npm test -- src/ui/App.test.tsx && npm run build`
 
 Expected: PASS; no aggregate score or best-pair copy appears in runtime output.
 
-- [ ] **Step 5: Commit Task 7**
+- [x] **Step 5: Commit Task 7**
 
 ```bash
 git add src/ui src/App.tsx src/styles.css
@@ -573,50 +573,34 @@ git commit -m "feat: complete two-generation breeding flow"
 
 ### Task 8: Browser persistence, viewport and completion verification
 
+> Execution note (2026-08-29): the local Playwright operating contract requires CLI-first browser QA and avoids creating `@playwright/test` specs unless requested. This task was therefore executed through the installed Playwright CLI wrapper with fresh snapshots before interactions. Screenshots and an inspectable QA receipt replace the originally proposed test-spec/config files; Vitest still covers the automated UI flow.
+
 **Files:**
-- Create: `playwright.config.ts`
-- Create: `e2e/vertical-slice.spec.ts`
+- Create: `docs/verification/2026-08-29-browser-qa.md`
+- Create: `output/playwright/*.png`
 - Create: `README.md`
 - Modify: `package.json`
 - Modify: `docs/superpowers/specs/2026-08-29-lovebird-breeding-vertical-slice-design.md`
 
 **Interfaces:**
 - Consumes: built app and IndexedDB repository.
-- Produces: repeatable browser acceptance command and final run instructions.
+- Produces: inspectable browser acceptance receipt and final run instructions.
 
-- [ ] **Step 1: Write failing real-browser acceptance tests**
+- [x] **Step 1: Define the real-browser acceptance checklist**
 
-```ts
-test('player completes two generations and state survives refresh', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: '我的牡丹鸟舍' })).toBeVisible();
-  await completeFirstGeneration(page);
-  await page.reload();
-  await expect(page.getByText('准备第二代')).toBeVisible();
-  await completeSecondGeneration(page);
-  await expect(page.getByRole('heading', { name: '你的第一条血系已经开始' })).toBeVisible();
-});
+The checklist requires a fresh browser session to reach the birdhouse, complete the first clutch, record a keep reason, survive refresh, complete a second-generation cross, and survive a second refresh. Both target viewports must report no horizontal overflow and no error-level console messages.
 
-test('page has no horizontal clipping at the configured viewport', async ({ page }) => {
-  await page.goto('/');
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
-  expect(overflow).toBe(false);
-});
-```
+- [x] **Step 2: Execute desktop CLI acceptance with fresh snapshots**
 
-- [ ] **Step 2: Run E2E before wiring config and confirm red state**
+Use the installed Playwright CLI wrapper. Take a fresh accessibility snapshot after each page-changing action before using element references. Save evidence beneath `output/playwright/`.
 
-Run: `npm run test:e2e`
+- [x] **Step 3: Execute tablet acceptance and document exact commands**
 
-Expected: FAIL because Playwright config/helpers are not complete.
-
-- [ ] **Step 3: Implement two projects and document exact commands**
-
-Configure `desktop-1440` at 1440×900 and `tablet-1024` at 1024×768. Start Vite on `127.0.0.1` with reuse disabled in CI. README must include `npm install`, `npm run dev`, `npm test`, `npm run build`, `npm run test:e2e`, prototype boundaries and the statement that compatibility parameters are game rules pending professional review.
+Use isolated CLI sessions at 1440×900 and 1024×768. Start Vite on `127.0.0.1`. README must include `npm install`, `npm run dev`, `npm test`, `npm run build`, the browser QA receipt, prototype boundaries and the statement that compatibility parameters are game rules pending professional review.
 
 Update the spec status from `待用户复核` to `已实现并完成技术验证` only after all commands below pass. Do not claim the five-person feedback gate has passed; label it `待目标玩家试玩`.
 
-- [ ] **Step 4: Run the full verification matrix and inspect browser screenshots**
+- [x] **Step 4: Run the full verification matrix and inspect browser screenshots**
 
 Run: `npm test`
 
@@ -626,16 +610,12 @@ Run: `npm run build`
 
 Expected: TypeScript and Vite build PASS.
 
-Run: `npm run test:e2e`
+Then run the local app through isolated CLI sessions and inspect screenshots for bird cards, pairing lab, birth reveal, persistence transitions and completion. Confirm no console errors, overlaps, clipping or hidden required actions. Record exact receipts in `docs/verification/2026-08-29-browser-qa.md`.
 
-Expected: happy path and persistence tests PASS in both viewport projects.
-
-Then run the local app and inspect screenshots for bird cards, pairing lab, birth reveal, pedigree and completion at both viewports. Confirm no console errors, overlaps, clipping or hidden required actions.
-
-- [ ] **Step 5: Commit Task 8**
+- [x] **Step 5: Commit Task 8**
 
 ```bash
-git add package.json package-lock.json playwright.config.ts e2e README.md docs/superpowers/specs
+git add package.json README.md docs/superpowers docs/verification output/playwright
 git commit -m "test: verify lovebird vertical slice end to end"
 ```
 
