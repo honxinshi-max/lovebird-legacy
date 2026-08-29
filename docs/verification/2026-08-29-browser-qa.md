@@ -56,6 +56,15 @@
 - [平板第二代配对截图](../../output/playwright/tablet-generation-two-pairing-1024x768.png)
 - [平板完成页截图](../../output/playwright/tablet-completion-1024x768.png)
 
+## 档案与四代血统窗口
+
+在空存档中打开晨露档案，检查已知表型、检测结果、未知位点、潜力与机会成本，以及四代血统窗口。桌面和平板均能滚动到血统区域，页面和对话框都没有横向溢出；父亲、母亲与基础种鸟节点没有遮挡。检查期间浏览器控制台错误为 0。
+
+- 桌面对话框：`scrollWidth = clientWidth = 1150`
+- 平板对话框：`scrollWidth = clientWidth = 990`
+- [桌面档案与血统图](../../output/playwright/desktop-profile-pedigree.png)
+- [平板档案与血统图](../../output/playwright/tablet-profile-pedigree-1024x768.png)
+
 ## 尚未跨越的门槛
 
 - 尚未完成至少 5 名目标玩家的可用性试玩。
