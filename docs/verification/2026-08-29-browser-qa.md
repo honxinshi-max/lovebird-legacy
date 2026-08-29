@@ -6,7 +6,7 @@
 
 ## 结论
 
-首个两代繁育垂直切片在真实 Chromium 会话中完成。桌面与平板目标视口均无横向溢出，错误级控制台消息均为 0。IndexedDB 在第一代留鸟后和第二代完成后两次刷新均恢复到正确阶段。
+首个两代繁育垂直切片在桌面和平板两条独立 Chromium 会话中完成。两个目标视口的关键页面均无横向溢出，错误级控制台消息均为 0。两条会话都在第一代留鸟后和第二代完成后刷新，并恢复到正确阶段。
 
 这份回执证明本地原型的可运行性与流程一致性，不证明目标玩家接受度、真实繁育学准确性或完整产品可行性。
 
@@ -40,17 +40,21 @@
 - [第二代有限兼容配对](../../output/playwright/desktop-generation-two-pairing.png)
 - [两代完成页](../../output/playwright/desktop-completion.png)
 
-## 平板初始鸟舍 · 1024×768
+## 平板完整闭环 · 1024×768
 
-使用全新浏览器会话和空本地存档打开初始鸟舍。6 只种鸟、四步进度轨、配对入口和档案入口均存在；布局不依赖 hover。
+使用全新浏览器会话和空本地存档重复完整流程：湖蓝 × 青柠第一代配种、展开遗传解释、填写留鸟理由、刷新恢复、与银铃进行第二代有限兼容配种、完成两代，再次刷新恢复完成页。最终统计同样为 12 个记录个体、2 个完成代数和 10 条历史事件。
 
 检查结果：
 
 - `viewport = 1024 × 768`
 - `scrollWidth = clientWidth = 1024`
-- `horizontalOverflow = false`
+- 初始鸟舍、第一代配对、出生揭晓、第二代配对和完成页：`horizontalOverflow = false`
 - 浏览器控制台：`Errors: 0, Warnings: 0`
+- 第一代留鸟后刷新：恢复到“准备第二代”
+- 第二代完成后刷新：恢复到“你的第一条血系已经开始”
 - [平板鸟舍截图](../../output/playwright/tablet-birdhouse-1024x768.png)
+- [平板第二代配对截图](../../output/playwright/tablet-generation-two-pairing-1024x768.png)
+- [平板完成页截图](../../output/playwright/tablet-completion-1024x768.png)
 
 ## 尚未跨越的门槛
 
