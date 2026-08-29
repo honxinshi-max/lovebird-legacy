@@ -62,6 +62,12 @@ export function assertStateIntegrity(state: GameState): void {
   if (new Set(state.events.map((event) => event.eventId)).size !== state.events.length) {
     throw new Error('DUPLICATE_EVENT_ID');
   }
+  if (
+    new Set(state.breedingEvents.map((event) => event.eventId)).size !==
+    state.breedingEvents.length
+  ) {
+    throw new Error('DUPLICATE_BREEDING_EVENT_ID');
+  }
   const birds = { ...state.pedigreeBirds, ...state.birds };
   for (const bird of Object.values(birds)) {
     assertNoSelfAncestor(bird, birds);

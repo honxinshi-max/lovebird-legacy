@@ -20,7 +20,7 @@ describe('pair assessment and breeding', () => {
     expect(assessment).not.toHaveProperty('recommended');
   });
 
-  it('blocks invalid sex and health while keeping close breeding as an explicit risk', () => {
+  it('blocks invalid sex, age, health, cooldown and lifetime limits while keeping close breeding as risk', () => {
     const state = createDemoState();
     const male = state.birds['BIRD-M-001'] as Bird;
     const otherMale = state.birds['BIRD-M-002'] as Bird;
@@ -40,6 +40,25 @@ describe('pair assessment and breeding', () => {
     relatedMother.status.health = 'unwell';
     expect(assessPairing(male, relatedMother, state).blockingReasons).toContainEqual(
       expect.objectContaining({ code: 'health-restricted' }),
+    );
+
+    relatedMother.status.health = 'healthy';
+    relatedMother.status.canBreed = true;
+    relatedMother.status.lifeStage = 'chick';
+    expect(assessPairing(male, relatedMother, state).blockingReasons).toContainEqual(
+      expect.objectContaining({ code: 'life-stage-invalid' }),
+    );
+
+    relatedMother.status.lifeStage = 'adult';
+    relatedMother.status.cooldownUntilTurn = state.turn + 1;
+    expect(assessPairing(male, relatedMother, state).blockingReasons).toContainEqual(
+      expect.objectContaining({ code: 'cooldown-active' }),
+    );
+
+    relatedMother.status.cooldownUntilTurn = state.turn;
+    relatedMother.status.breedingCount = relatedMother.status.lifetimeBreedingLimit;
+    expect(assessPairing(male, relatedMother, state).blockingReasons).toContainEqual(
+      expect.objectContaining({ code: 'breeding-limit-reached' }),
     );
   });
 
@@ -73,6 +92,24 @@ describe('pair assessment and breeding', () => {
     ).toBe(true);
     expect(first.explanations).toHaveLength(3);
     expect(first.explanations.every((items) => items.length === 12)).toBe(true);
+  });
+
+  it('treats incomplete ancestry as unknown risk instead of unrelated', () => {
+    const state = createDemoState();
+    const father = structuredClone(state.birds['BIRD-M-001']) as Bird;
+    father.fatherId = 'MISSING-ANCESTOR' as BirdId;
+    state.birds[father.birdId] = father;
+
+    const assessment = assessPairing(
+      father,
+      state.birds['BIRD-F-001'] as Bird,
+      state,
+    );
+
+    expect(assessment.relationship.category).toBe('risk-unknown');
+    expect(assessment.blockingReasons).toContainEqual(
+      expect.objectContaining({ code: 'pedigree-incomplete' }),
+    );
   });
 
   it('returns a recorded failed attempt instead of creating chicks', () => {

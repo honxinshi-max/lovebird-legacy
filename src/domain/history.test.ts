@@ -47,4 +47,14 @@ describe('append-only history', () => {
   it('accepts an untouched demo state as internally consistent', () => {
     expect(() => assertStateIntegrity(createDemoState())).not.toThrow();
   });
+
+  it('rejects a bird that appears in its own ancestry chain', () => {
+    const state = createDemoState();
+    const bird = structuredClone(state.birds['BIRD-M-001']);
+    if (!bird) throw new Error('Expected seed bird');
+    bird.fatherId = bird.birdId;
+    state.birds[bird.birdId] = bird;
+
+    expect(() => assertStateIntegrity(state)).toThrow('SELF_ANCESTOR');
+  });
 });

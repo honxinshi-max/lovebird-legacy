@@ -6,6 +6,17 @@ import { MemoryGameRepository } from '../persistence/repository';
 import { GameService } from './game';
 
 describe('two-generation application commands', () => {
+  it('preserves low compatibility through the application command', async () => {
+    const game = await GameService.create(new MemoryGameRepository());
+
+    expect(
+      game.comparePair(
+        'BIRD-M-001' as BirdId,
+        'BIRD-F-003' as BirdId,
+      ).compatibility,
+    ).toBe('low');
+  });
+
   it('persists a first clutch, keep decision and second generation', async () => {
     const repository = new MemoryGameRepository();
     const game = await GameService.create(repository);
@@ -78,6 +89,27 @@ describe('two-generation application commands', () => {
 
     expect(() => assertStateIntegrity(corrupted)).toThrow(
       'RESULT_DIGEST_MISMATCH',
+    );
+  });
+
+  it('rejects duplicate breeding event identifiers in a saved state', async () => {
+    const game = await GameService.create(new MemoryGameRepository());
+    const result = await game.breed({
+      fatherId: 'BIRD-M-001' as BirdId,
+      motherId: 'BIRD-F-001' as BirdId,
+      seed: 8241,
+    });
+    if (!result.ok) throw new Error('Expected first clutch');
+    const corrupted = game.getState();
+    const event = corrupted.breedingEvents[0];
+    if (!event) throw new Error('Expected breeding event');
+    corrupted.breedingEvents = [
+      ...corrupted.breedingEvents,
+      structuredClone(event),
+    ];
+
+    expect(() => assertStateIntegrity(corrupted)).toThrow(
+      'DUPLICATE_BREEDING_EVENT_ID',
     );
   });
 });
