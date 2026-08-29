@@ -79,6 +79,7 @@ describe('pair assessment and breeding', () => {
     if (!first.ok) throw new Error('Expected successful clutch');
     expect(first.chicks).toHaveLength(3);
     expect(new Set(first.chicks.map((chick) => chick.birdId)).size).toBe(3);
+    expect(new Set(first.chicks.map((chick) => chick.bandId)).size).toBe(3);
     expect(first.chicks.every((chick) => chick.fatherId === command.fatherId)).toBe(true);
     expect(first.chicks.every((chick) => chick.motherId === command.motherId)).toBe(true);
     expect(
